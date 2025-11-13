@@ -7,18 +7,19 @@ A PyQt6-based graphical user interface (GUI) for controlling neuromuscular elect
 
 This repository also includes the **ESP32 code** used for acquiring force sensor data and communicating with the GUI over a serial connection.  
 
-## System Overview
+## 🔌 System Overview
 
-+--------------------+         +-------------------+
-|    PyQt6 GUI       |  <-->   |     ESP32 Board   |
-| (Force Plot, NMES) |  UART   | (Force Sensor I/O)|
-+--------------------+         +-------------------+
-            |                            |
-            | USB Serial                 | Analog / Digital
-            v                            v
-     +------------------+          +------------------+
-     | Digitimer DS7A/R |          |  Force Sensor    |
-     +------------------+          +------------------+
+
++--------------------+ +-------------------+
+| PyQt6 GUI | <--> | ESP32 Board |
+| (Force Plot, NMES) | UART | (Force Sensor I/O)|
++--------------------+ +-------------------+
+| |
+| USB Serial | Analog / Digital
+v v
++------------------+ +------------------+
+| Digitimer DS7A/R | | Force Sensor |
++------------------+ +------------------+
 
 
 The interface application provides two main modes:
@@ -45,7 +46,7 @@ The interface application provides two main modes:
 - Sends continuous data streams over UART/USB serial.
 - Can optionally trigger NMES commands or synchronization signals.
 - Communicates directly with the Python GUI.
-- 
+  
 ---
 
 ## 🧰 Requirements
