@@ -9,7 +9,20 @@ This repository also includes the **ESP32 code** used for acquiring force sensor
 
 ## 🔌 System Overview
 
-<pre> ```text +--------------------+ +-------------------+ | PyQt6 GUI | <--> | ESP32 Board | | (Force Plot, NMES) | UART | (Force Sensor I/O)| +--------------------+ +-------------------+ | | | USB Serial | Analog / Digital v v +------------------+ +------------------+ | Digitimer DS7A/R | | Force Sensor | +------------------+ +------------------+ ``` </pre>
+
+
+```text
++--------------------+         +-------------------+
+|     PyQt6 GUI      |  <-->   |     ESP32 Board   |
+| (Force Plot, NMES) |  UART   | (Force Sensor I/O)|
++--------------------+         +-------------------+
+            |                            |
+            | USB Serial                 | Analog / Digital
+            v                            v
+     +------------------+          +------------------+
+     | Digitimer DS7A/R |          |   Force Sensor   |
+     +------------------+          +------------------+
+
 
 
 The interface application provides two main modes:
