@@ -1,0 +1,16 @@
+name: NMES_GUI
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - pyserial
+  - spyder-kernels=3.0
+  - pyqtgraph
+  - pip
+  - pip:
+      - pyqt6
+      # if your custom UI modules are pip-installable, add them here
+      # otherwise, just keep the .py files in your project directory
+      # - pyDigitimerNMESForce
+      # - pyDigitimerNMESForceVoluntary
