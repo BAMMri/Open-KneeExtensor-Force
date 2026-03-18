@@ -1,69 +1,145 @@
 # Open-KneeExtensor-Force
 Knee extensor force sensor documentation and code files etc.
 
-# PyDigitimer NMES Force GUI
 
-A PyQt6-based graphical user interface (GUI) for controlling neuromuscular electrical stimulation (NMES) parameters on the **Digitimer DS7A/DS7R** stimulator and visualizing **voluntary motion feedback** through real-time force plotting.
 
-This repository also includes the **ESP32 code** used for acquiring force sensor data and communicating with the GUI over a serial connection.  
+## 🔌 System Architecture
 
-## 🔌 System Overview
+At the core of the system is an ESP32 with a custom shield, which acts as the central hub for all signal routing, acquisition, and triggering.
 
+The ESP32 interfaces with stimulation devices, sensors, and the MRI scanner, while a PyQt6-based GUI running on a host computer provides full control over all modes via USB.
+🧭 System Schematic
+                           +----------------------+
+                           |      PyQt6 GUI       |
+                           |  (Control & Display) |
+                           +----------+-----------+
+                                      |
+                                      | USB (Serial)
+                                      v
+                           +----------------------+
+                           |       ESP32 +        |
+                           |        Shield        |
+                           +----+----+----+-------+
+                                |    |    |
+        ------------------------+    |    +------------------------
+        |                             |                             |
+        |                             |                             |
+        v                             v                             v
+
++------------------+     +----------------------+     +----------------------+
+|   Load Cell      |     |  NMES Beurer (Ch2)   |     |   Digitimer DS7A/R   |
+| (via Ethernet)   |     |      Input Signal    |     |   Pulse Generator    |
++------------------+     +----------------------+     +----------------------+
+
+                                |
+                                |
+                                v
+                        +------------------+
+                        |   MRI Scanner    |
+                        | (Trigger Input)  |
+                        +------------------+
+
+## 🔧 Wiring: Load Cell → Ethernet Interface
+
+The load cell is connected to the ESP32 shield via an Ethernet cable. The following mapping defines how each load cell wire is routed to the Ethernet connector pins. Multiple load cells can be connected in parallel to increase total measurable force while maintaining a single signal output.
+🧭 Wiring Diagram
+Load Cell                          Ethernet Cable 
+-----------                        ----------------------
+ Red   (VCC / E+)   -------------> Pin 1
+
+ White (DATA / A−)  -------------> Pin 2
+
+ Green (CLK / A+)   -------------> Pin 3
+
+ Black (GND / E−)   -------------> Pin 6
+
+ Shield (Bare)      -------------> Shield (Connector Housing)
 
 
 ```text
-+--------------------+         +-------------------+
-|     PyQt6 GUI      |  <-->   |     ESP32 Board   |
-| (Force Plot, NMES) |  UART   | (Force Sensor I/O)|
-+--------------------+         +-------------------+
-            |                            |
-            | USB Serial                 | Analog / Digital
-            v                            v
-     +------------------+          +------------------+
-     | Digitimer DS7A/R |          |   Force Sensor   |
-     +------------------+          +------------------+
 
+## 🔄 Signal Capabilities
 
+The ESP32 system supports the following signal pathways:
 
-The interface application provides two main modes:
-1. **NMES Control Panel** — control and log Digitimer DS7 pulse train parameters (frequency, on/off timing, etc.)
-2. **Voluntary Motion Feedback** — visualize voluntary contraction force and load target force profiles.
+📥 Input
 
----
+Force data from load cell (via Ethernet connection)
 
-## 🧠 Features
+Stimulation signal from NMES Beurer (Channel 2)
 
-### 🖥 GUI (Python / PyQt6)
-- Control Digitimer DS7A/DS7R stimulation parameters:
-  - Frequency (1–200 Hz)
-  - On/off durations (100–10,000 ms)
-- Real-time serial data streaming from the ESP32.
-- Live force feedback visualization using **pyqtgraph**.
-- Logging of stimulation and force data.
-- Calibration and reset tools (Max/Tare).
-- Launch a **Voluntary Motion Feedback** window for target tracking tasks.
-- Load or reset default target force profiles.
+📤 Output
 
-### ⚙️ ESP32 Firmware
-- Acquires force sensor data (e.g. via analog amplifier or load cell ADC).
-- Sends continuous data streams over UART/USB serial.
-- Can optionally trigger NMES commands or synchronization signals.
-- Communicates directly with the Python GUI.
-  
----
+Trigger signal to MRI scanner
 
-## 🧰 Requirements
+Pulse control signal to Digitimer DS7A/R
 
-Make sure you have the following Python environment:
+🔁 Bidirectional Control
 
-```bash
-python >= 3.10
-PyQt6 >= 6.9.1
-pyqtgraph >= 0.13.7
-pyserial >= 3.5
-numpy
+Full communication with GUI via USB (serial)
 
-pip install -r requirements.txt
+## 🎛️ Operation Modes
+
+The GUI controls the system and can operate in three distinct modes:
+
+1. ⚡ NMES Beurer Mode (Synchronized Input Mode)
+
+Receives stimulation signal from NMES Beurer (Channel 2)
+
+Detects timing of incoming pulses
+
+Generates a synchronized trigger signal to the MRI scanner
+
+✅ Use case:
+
+Synchronizing externally generated stimulation with MRI acquisition
+
+2. 🔋 Digitimer Mode (Pulse Generation Mode)
+
+GUI defines stimulation parameters:
+
+Frequency
+
+Pulse width
+
+Train timing
+
+ESP32 sends:
+
+Control signal to Digitimer DS7A/R
+
+Simultaneous trigger signal to MRI scanner
+
+✅ Use case:
+
+Fully controlled electrical stimulation experiments
+
+3. 💪 Voluntary Motion Mode (Force Feedback Mode)
+
+GUI generates configurable trigger signals
+
+Trigger is sent to:
+
+MRI scanner
+
+Feedback interface (second display window)
+
+Simultaneously:
+
+Force is acquired from the load cell
+
+Participant sees:
+
+Real-time force output
+
+Target force profile
+
+Synchronized visual + audio cues
+
+✅ Use case:
+
+Motor control and neurofeedback experiments
+
 
 ## 🧑‍💻 Author
 
