@@ -9,6 +9,7 @@ At the core of the system is an ESP32 with a custom shield, which acts as the ce
 
 The ESP32 interfaces with stimulation devices, sensors, and the MRI scanner, while a PyQt6-based GUI running on a host computer provides full control over all modes via USB.
 🧭 System Schematic
+```text
                            +----------------------+
                            |      PyQt6 GUI       |
                            |  (Control & Display) |
@@ -38,6 +39,7 @@ The ESP32 interfaces with stimulation devices, sensors, and the MRI scanner, whi
                         |   MRI Scanner    |
                         | (Trigger Input)  |
                         +------------------+
+```text
 
 ## 🔧 Wiring: Load Cell → Ethernet Interface
 
@@ -56,7 +58,7 @@ Load Cell                          Ethernet Cable
  Shield (Bare)      -------------> Shield (Connector Housing)
 
 
-```text
+
 
 ## 🔄 Signal Capabilities
 
