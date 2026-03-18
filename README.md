@@ -39,12 +39,14 @@ The ESP32 interfaces with stimulation devices, sensors, and the MRI scanner, whi
                         |   MRI Scanner    |
                         | (Trigger Input)  |
                         +------------------+
-```text
+```
+
 
 ## 🔧 Wiring: Load Cell → Ethernet Interface
 
 The load cell is connected to the ESP32 shield via an Ethernet cable. The following mapping defines how each load cell wire is routed to the Ethernet connector pins. Multiple load cells can be connected in parallel to increase total measurable force while maintaining a single signal output.
 🧭 Wiring Diagram
+```text
 Load Cell                          Ethernet Cable 
 -----------                        ----------------------
  Red   (VCC / E+)   -------------> Pin 1
@@ -56,7 +58,7 @@ Load Cell                          Ethernet Cable
  Black (GND / E−)   -------------> Pin 6
 
  Shield (Bare)      -------------> Shield (Connector Housing)
-
+```
 
 
 
